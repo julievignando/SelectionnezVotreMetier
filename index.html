@@ -14,7 +14,7 @@
     .container {
       width: 100%;
       margin-top: 32px;
-      text-align: center; /* Centrage horizontal du contenu */
+      text-align: center;
     }
     .titre {
       font-size: 24px;
@@ -30,10 +30,15 @@
       border: 1px solid #ccc;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
       background: #fff;
-      margin: 0 auto; /* Centrage horizontal du menu */
+      margin: 0 auto;
     }
     .choices__list--dropdown, .choices__list[aria-expanded] {
       font-size: 18px;
+    }
+    .souscat-label {
+      margin-top: 24px;
+      font-size: 20px;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -42,38 +47,187 @@
     <div class="titre">Sélectionnez votre métier :</div>
     <select id="metier-select">
       <option value="" disabled selected>-- Sélectionnez un métier --</option>
-      <option value="DASP" data-link="https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?ga=1">DASP</option>
-      <option value="Peintre" data-link="https://votre-site.sharepoint.com/sites/peintre">Peintre</option>
-      <option value="Electromécanicien" data-link="https://votre-site.sharepoint.com/sites/electromecanicien">Electromécanicien</option>
-      <option value="AMI" data-link="https://votre-site.sharepoint.com/sites/ami">AMI</option>
-      <option value="AEST" data-link="https://votre-site.sharepoint.com/sites/aest">AEST</option>
-      <option value="ATA" data-link="https://votre-site.sharepoint.com/sites/ata">ATA</option>
-      <option value="AEP" data-link="https://votre-site.sharepoint.com/sites/aep">AEP</option>
-      <option value="Logistique" data-link="https://votre-site.sharepoint.com/sites/logistique">Logistique</option>
-      <option value="Métiers tertiaires" data-link="https://votre-site.sharepoint.com/sites/tertiaire">Métiers tertiaires</option>
-      <option value="Polyvalent événementiel" data-link="https://votre-site.sharepoint.com/sites/evenementiel">Polyvalent événementiel</option>
-      <option value="Cuisinier" data-link="https://votre-site.sharepoint.com/sites/cuisinier">Cuisinier</option>
-      <option value="Jardinier" data-link="https://votre-site.sharepoint.com/sites/jardinier">Jardinier</option>
-      <option value="Agent d'entretien" data-link="https://votre-site.sharepoint.com/sites/entretien">Agent d'entretien</option>
+      <option value="DASP">DASP</option>
+      <option value="Peintre">Peintre</option>
+      <option value="Electromécanicien">Electromécanicien</option>
+      <option value="AMI">AMI</option>
+      <option value="AEST">AEST</option>
+      <option value="ATA">ATA</option>
+      <option value="AEP">AEP</option>
+      <option value="Logistique">Logistique</option>
+      <option value="Métiers tertiaires">Métiers tertiaires</option>
+      <option value="Polyvalent événementiel">Polyvalent événementiel</option>
+      <option value="Cuisinier">Cuisinier</option>
+      <option value="Jardinier">Jardinier</option>
+      <option value="Agent d'entretien">Agent d'entretien</option>
     </select>
+
+    <div id="souscat-container" style="display:none;">
+      <div class="souscat-label">Sélectionnez une sous-catégorie :</div>
+      <select id="souscat-select">
+        <option value="" disabled selected>-- Sélectionnez une sous-catégorie --</option>
+      </select>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
-    const element = document.getElementById('metier-select');
-    const choices = new Choices(element, {
+    // Définition des sous-catégories et liens associés à chaque métier
+    const sousCategories = {
+      "DASP": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Peintre": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Electromécanicien": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "AMI": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "AEST": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "ATA": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "AEP": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Logistique": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Polyvalent événementiel": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Métiers tertiaire": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Agent d'entretien": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Cuisinier": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      "Jardinier": [
+        { nom: "EPI", lien: "https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?e=aZ40Ad" },
+        { nom: "Formation", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-formations.aspx?csf=1&web=1&share=ETJv3AcsXV5LgOALyMg0pvIBa1nNEzweQxmYgBL7ub744A&e=5blaM7" },
+        { nom: "Risques chimique", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-risques-chimiques.aspx?csf=1&web=1&share=EcefwbB70U9FvGTL-GRaShIBENhzhzgTTSKr8VISAeR_Mg&e=rOvnZi" },
+        { nom: "Environnement", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Environnement.aspx?csf=1&web=1&share=EdJ4vHjyjTFLql-5r8w07cQBRv_RB8ewU32lLs3kk0nizA&e=xj3ej9" },
+        { nom: "Santé & Sécurité", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Sant%C3%A9-S%C3%A9curit%C3%A9.aspx?csf=1&web=1&share=ESmSS984AM9GiJFGtzOWEDABKnj2xjoWZ65gWrbprpE39g&e=no9ubH" },
+        { nom: "Ergonomie", lien: "https://jcdecaux.sharepoint.com/:u:/r/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-Ergonomie.aspx?csf=1&web=1&share=EWUayLOD1W5Fl6ddaBtBU_8BOx4Q5oyZj4r6nxlY594S6g&e=F6Dj2V" }
+      ],
+      // Ajouter ici les autres métiers et sous-catégories
+    };
+
+    // Initialisation Choices.js sur les deux menus
+    const metierSelect = document.getElementById('metier-select');
+    const souscatSelect = document.getElementById('souscat-select');
+    const souscatContainer = document.getElementById('souscat-container');
+    const metierChoices = new Choices(metierSelect, {
       searchEnabled: true,
       itemSelectText: '',
       shouldSort: false,
       searchPlaceholderValue: 'Rechercher un métier...'
     });
+    let souscatChoices = new Choices(souscatSelect, {
+      searchEnabled: true,
+      itemSelectText: '',
+      shouldSort: false,
+      searchPlaceholderValue: 'Rechercher une sous-catégorie...'
+    });
 
-    // Rediriger vers la page SharePoint associée au métier sélectionné
-    element.addEventListener('change', () => {
-      const selectedOption = element.options[element.selectedIndex];
-      const link = selectedOption.getAttribute('data-link');
-      if (link) {
-        window.open(link, '_blank'); // Ouvre le lien dans un nouvel onglet
+    // Mise à jour des sous-catégories selon le métier choisi
+    metierSelect.addEventListener('change', () => {
+      const metier = metierSelect.value;
+      const cats = sousCategories[metier] || [];
+      // Réinitialise le menu sous-catégorie
+      souscatChoices.clearStore();
+      souscatSelect.innerHTML = '<option value="" disabled selected>-- Sélectionnez la thématique pour laquelle vous avez une question --</option>';
+      if (cats.length > 0) {
+        cats.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat.lien;
+          opt.textContent = cat.nom;
+          souscatSelect.appendChild(opt);
+        });
+        souscatContainer.style.display = 'block';
+        souscatChoices.destroy();
+        souscatChoices = new Choices(souscatSelect, {
+          searchEnabled: true,
+          itemSelectText: '',
+          shouldSort: false,
+          searchPlaceholderValue: 'Recherchez la thématique...'
+        });
+      } else {
+        souscatContainer.style.display = 'none';
       }
+    });
+
+    // Redirection lors du choix d'une sous-catégorie
+    souscatSelect.addEventListener('change', () => {
+      const lien = souscatSelect.value;
+      if (lien) window.open(lien, '_blank');
     });
   </script>
 </body>
