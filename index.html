@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      width: 100%;
+      height: 100%;
+    }
+    .container {
+      width: 100%;
+      margin-top: 32px;
+      text-align: center; /* Centrage horizontal du contenu */
+    }
+    .titre {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .choices__inner {
+      min-width: 350px;
+      font-size: 22px;
+      padding: 14px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      background: #fff;
+      margin: 0 auto; /* Centrage horizontal du menu */
+    }
+    .choices__list--dropdown, .choices__list[aria-expanded] {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="titre">Sélectionnez votre métier :</div>
+    <select id="metier-select">
+      <option value="" disabled selected>-- Sélectionnez un métier --</option>
+      <option value="DASP" data-link="https://jcdecaux.sharepoint.com/sites/bee-dgrpo-securite/SitePages/Questions-collaborateurs-EPI.aspx?ga=1">DASP</option>
+      <option value="Peintre" data-link="https://votre-site.sharepoint.com/sites/peintre">Peintre</option>
+      <option value="Electromécanicien" data-link="https://votre-site.sharepoint.com/sites/electromecanicien">Electromécanicien</option>
+      <option value="AMI" data-link="https://votre-site.sharepoint.com/sites/ami">AMI</option>
+      <option value="AEST" data-link="https://votre-site.sharepoint.com/sites/aest">AEST</option>
+      <option value="ATA" data-link="https://votre-site.sharepoint.com/sites/ata">ATA</option>
+      <option value="AEP" data-link="https://votre-site.sharepoint.com/sites/aep">AEP</option>
+      <option value="Logistique" data-link="https://votre-site.sharepoint.com/sites/logistique">Logistique</option>
+      <option value="Métiers tertiaires" data-link="https://votre-site.sharepoint.com/sites/tertiaire">Métiers tertiaires</option>
+      <option value="Polyvalent événementiel" data-link="https://votre-site.sharepoint.com/sites/evenementiel">Polyvalent événementiel</option>
+      <option value="Cuisinier" data-link="https://votre-site.sharepoint.com/sites/cuisinier">Cuisinier</option>
+      <option value="Jardinier" data-link="https://votre-site.sharepoint.com/sites/jardinier">Jardinier</option>
+      <option value="Agent d'entretien" data-link="https://votre-site.sharepoint.com/sites/entretien">Agent d'entretien</option>
+    </select>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    const element = document.getElementById('metier-select');
+    const choices = new Choices(element, {
+      searchEnabled: true,
+      itemSelectText: '',
+      shouldSort: false,
+      searchPlaceholderValue: 'Rechercher un métier...'
+    });
+
+    // Rediriger vers la page SharePoint associée au métier sélectionné
+    element.addEventListener('change', () => {
+      const selectedOption = element.options[element.selectedIndex];
+      const link = selectedOption.getAttribute('data-link');
+      if (link) {
+        window.open(link, '_blank'); // Ouvre le lien dans un nouvel onglet
+      }
+    });
+  </script>
+</body>
+</html>
